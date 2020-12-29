@@ -2,6 +2,7 @@ const express = require('express')
 const routes = express.Router()
 const teachers = require("./app/controllers/teachers")
 const TeacherValidator = require('./app/validators/teacher')
+const StudentValidator = require('./app/validators/student')
 const students = require("./app/controllers/students")
 
 routes.get('/', function (req, res){
@@ -21,7 +22,7 @@ routes.delete("/teachers", teachers.delete) // working on it
 
 routes.get('/students', students.index)
 routes.get("/students/create", students.create)
-routes.post("/students", students.post)
+routes.post("/students", StudentValidator.post, students.post)
 routes.get("/students/:id", students.show)
 routes.get("/students/:id/edit", students.edit )
 routes.put("/students", students.update) //put

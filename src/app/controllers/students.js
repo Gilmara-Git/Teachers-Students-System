@@ -1,139 +1,83 @@
 
 const { grade, date } = require("../../lib/utils")
-const Intl = require("intl")
+//const Intl = require("intl")
 const Student = require("../models/student")
 
 
 module.exports = {
+  async index(req, res) {
+    let { filter, page, limit } = req.query;
 
-    index(req, res) { 
+    page = page || 1;
+    limit = limit | 4;
+    let offset = limit * (page - 1);
 
-        let {filter, page, limit}  = req.query
+    const params = {
+      filter,
+      limit,
+      offset,
+    };
+    const students = await Student.paginate(params);
+    if (students == "") return res.render("students/not-found");
 
-        page = page || 1
-        limit = limit | 2 
-        let offset = limit * (page - 1 )
+    const pagination = {
+      page,
+      total: Math.ceil(students[0].total / limit),
+    };
 
-        // console.log(filter)
-        // console.log(limit)
-        // console.log(page)
+    return res.render("students/index", { students, filter, pagination });
+  },
 
-        const params = {
-            filter,
-            limit, 
-            offset,
-            callback(students){
-                if(students == "") return res.render("students/not-found")
+  async create(req, res) {
+    const teacherIdName = await Student.teachersSelectOptions() 
+      return res.render("students/create", { teacherOptions: teacherIdName }); 
+  },
 
-                const pagination = {
+ async post(req, res) {
+    
+    const student = await Student.create(req.body)
+      return res.redirect(`/students/${student.id}`);
+   
+  },
 
-                    page,
-                    total: Math.ceil(students[0].total/limit)
-                }
+  async show(req, res) {
+    const student = await Student.find(req.params.id)
+      if (!student) return res.send("Student does not exist");
 
-                return res.render("students/index", {students, filter, pagination})  
+      student.dob = date(student.dob).birthday,
+      student.created_at = date(student.created_at).format,
+      student.grade = grade(student.grade);
 
-            }
-        }
-        
+      return res.render("students/show", { student });
+    
+  },
 
-        Student.paginate(params)
-       
+ async edit(req, res) {
+    const student = await Student.find(req.params.id)
+      if (!student) res.send("Student does not exist.");
 
-        
-    }, 
-    create(req, res) {
+      student.dob = date(student.dob).iso,
+      student.grade = grade(student.grade);
 
-        Student.teachersSelectOptions(function(teacherIdName){
-            
-            return res.render("students/create", { teacherOptions : teacherIdName})
+      const teacherIdName = await Student.teachersSelectOptions()
+        console.log(teacherIdName);
+        return res.render("students/edit", { student,teacherOptions: teacherIdName });
+    
+  },
 
-        })
-
-       
-     }, 
-
-    post(req, res) {
-        const keys = Object.keys(req.body)
-        console.log(req.body)
-        
-            for(let key of keys) {
-                if(req.body[key]=="")    
-                return res.send("Fill in all the lines")
-            
-            }
-       Student.create(req.body, function(student){
-
-        return res.redirect(`/students/${student.id}`)
-
-       })
-
-
-     }, 
-
-    show(req, res) { 
-
-        Student.find(req.params.id, function(student){
-            if(!student) return res.send("Student does not exist")
-
-            student.dob = date(student.dob).birthday,
-            student.created_at = date(student.created_at).format,
-            student.grade = grade(student.grade)
-
-            return res.render("students/show", {student})
-
-        })
-
-    }, 
-
-    edit(req, res) { 
-
-        Student.find(req.params.id, function(student){
-            if(!student) res.send("Student does not exist.")
-            
-            student.dob = date(student.dob).iso,
-            student.grade = grade(student.grade)
-
-            Student.teachersSelectOptions(function(teacherIdName){
-                    console.log(teacherIdName)
-                return res.render("students/edit", {student, teacherOptions: teacherIdName})
-
-            })
-            
-            
-
-        })
-        
-        
-    },
-
-    update(req, res) { 
-
-        const keys = Object.keys(req.body)        
-            for(let key of keys) {    
-                if(req.body[key]=="")    
-                return res.send("Fill in all the lines")
-            
-           }
-
-           Student.update(req.body, function(){
-            //console.log(req.body)
-            return res.redirect(`students/${req.body.id}`)
-        
-
-        })
-
-    }, 
-    delete(req, res) {
-
-        Student.delete(req.body.id, function(){
-
-            return res.redirect("students")
-        })
-
-        
-     } 
-}
+ async update(req, res) {
+   
+    await Student.update(req.body)
+      //console.log(req.body)
+      return res.redirect(`students/${req.body.id}`);
+   
+  },
+ async delete(req, res) {
+    await Student.delete(req.body.id)
+      return res.redirect("students");
+    
+  },
+};
 
 
 
