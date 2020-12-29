@@ -23,7 +23,14 @@ function checkAllfields(body){
     }
 
 
+    function update(req, res, next){ 
+
+        const fieldsInBlank = checkAllfields(req.body)
+        if(fieldsInBlank) return res.send("Fill all lines, this is the update")
+        next()
+    }
+
 module.exports = { 
 
-    post
+    post, update
 }

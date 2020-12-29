@@ -1,28 +1,26 @@
 const db =  require("../../config/db")
 const { date, graduation} =  require("../../lib/utils")
 
-module.exports = { 
-all(callback) { 
+module.exports = {
+//   all() {
+//       try{
+//     db.query(
+//       `SELECT teachers.*, count(students) AS total_students
+//                 FROM teachers 
+//                 LEFT JOIN students ON(teachers.id = students.teacher_id)
+//                 GROUP BY teachers.id
+//                 ORDER BY total_students DESC`
+//     );
 
-    db.query( `SELECT teachers.*, count(students) AS total_students
-                FROM teachers 
-                LEFT JOIN students ON(teachers.id = students.teacher_id)
-                GROUP BY teachers.id
-                ORDER BY total_students DESC`, function(err, results){
+//       }catch(error){
+//           console.error(error)
+//       }
+//   },
 
-        if(err) throw `Database error! ${err}`
-
-        callback(results.rows)
-    })
-},
-
-
- create(data, callback) {
-    console.log('linha21', data)
-    try{ 
-
-        
-    const query  = `
+ async create(data) {
+    
+    try {
+      const query = `
     INSERT INTO teachers (
         avatar_url,
         name,
@@ -33,44 +31,43 @@ all(callback) {
         created_at
    ) VALUES ($1, $2, $3, $4, $5, $6, $7)
    RETURNING id    
-`
+`;
 
-const values = [
-data.avatar_url,
-data.name,
-date(data.dob).iso,
-data.degree,
-data.delivery,
-data.subjects,
-date(Date.now()).iso    
-]           
-console.log('linha 47 teachers models', values)
-db.query(query, values, function(err, results){
+      const values = [
+        data.avatar_url,
+        data.name,
+        date(data.dob).iso,
+        data.degree,
+        data.delivery,
+        data.subjects,
+        date(Date.now()).iso,
+      ];
+      
+      const results = await db.query(query, values) 
 
-if(err) throw `Database error! ${err}`
+        return results.rows[0]
 
-callback(results.rows[0])
-
-})
-
-
-    } catch(error){ console.error(error)
+    } catch(error){
+        console.error(error)
     }
+  },
 
-},
+  async find(id) {
 
-find(id, callback){
-
-    db.query(` SELECT * from teachers WHERE id = $1`, [id], function(err, results){
-        
-        if(err) throw `Database error! ${err}`
-
-        callback(results.rows[0])
-    })
-},
-
-update(data, callback) {
+    try {
     
+    const results = await db.query( ` SELECT * from teachers WHERE id = $1`, [id])
+      return results.rows[0]
+    
+    }catch(error){
+        console.error(error)
+    }
+    
+  },
+
+ async update(data) {
+
+    try{
     const query = `
     
                     UPDATE teachers SET 
@@ -81,77 +78,78 @@ update(data, callback) {
                         delivery=($5),
                         subjects=($6)
                     WHERE id = $7  
-                    `  
-                
-      const values = [
-            data.avatar_url,
-            data.name,
-            date(data.dob).iso,
-            data.degree,
-            data.delivery,
-            data.subjects,
-            data.id
-      ]             
+                    `;
 
-    db.query(query, values, function(err, results){
-        
-        if(err) throw `Database error! ${err}`
+    const values = [
+      data.avatar_url,
+      data.name,
+      date(data.dob).iso,
+      data.degree,
+      data.delivery,
+      data.subjects,
+      data.id,
+    ];
 
-        callback() // No need to send anything on the callback function
+    return await db.query(query, values) 
+    }catch(error){
+        console.error(error)
+    }
+  },
 
-    })                    
+  async delete(id) {
 
-},
+    try{
 
+    return await db.query(`DELETE FROM teachers WHERE id= $1 `,  [id] )
+    
+    }catch(error){
+        console.error(error)
+    } 
+  },
 
-delete(id, callback) {
+//   async findBy(filter) {
 
-        db.query(`DELETE FROM teachers WHERE id= $1 `, [id], function(err, results){
-                if(err) throw `Database error! ${err}`
+//     try{
+//     const results =  await db.query(
+//       `SELECT teachers.*, count(students) AS total_students
+//                 FROM teachers 
+//                 LEFT JOIN students ON(teachers.id = students.teacher_id)
+//                 WHERE teachers.name ILIKE '%${filter}%'
+//                 OR teachers.subjects ILIKE '%${filter}%'
+//                 GROUP BY teachers.id
+//                 ORDER BY total_students DESC`,
+     
+//     );
 
-                callback() // No need to send anything on the callback function
-        })
+//     return results.rows
 
- }, 
+//     }catch(error){
 
- findBy(filter, callback){
-    db.query(`SELECT teachers.*, count(students) AS total_students
-                FROM teachers 
-                LEFT JOIN students ON(teachers.id = students.teacher_id)
-                WHERE teachers.name ILIKE '%${filter}%'
-                OR teachers.subjects ILIKE '%${filter}%'
-                GROUP BY teachers.id
-                ORDER BY total_students DESC`, function(err, results){
-                    if(err) throw `Database erro! ${err}`
-                    //console.log(results)
-                    callback(results.rows)
-                })
+//         console.error(error)
+//     }
+//   },
 
- }, 
+ async paginate(params) {
 
- paginate(params){
-
-    const { filter, limit, offset , callback} = params
+    try {
+    const { filter, limit, offset} = params;
 
     let query = "",
-    filterQuery = "",
-    totalQuery = `
-                    (SELECT COUNT(*) from teachers) AS total`
+      filterQuery = "",
+      totalQuery = `
+                    (SELECT COUNT(*) from teachers) AS total`;
 
-
-    if(filter) { 
-        filterQuery = `
+    if (filter) {
+      filterQuery = `
                     WHERE teachers.name ILIKE '%${filter}%'
-                    OR teachers.subjects ILIKE '%${filter}%'`
+                    OR teachers.subjects ILIKE '%${filter}%'`;
 
-        totalQuery = `(
+      totalQuery = `(
                       SELECT COUNT(*) from teachers
-                      ${filterQuery} ) AS total`
-                      
+                      ${filterQuery} ) AS total`;
     }
 
-
-        query = `   
+    query = `   
                     SELECT teachers.*, ${totalQuery}, COUNT(students) AS total_students
                     FROM teachers
                     LEFT JOIN students ON (students.teacher_id = teachers.id) 
@@ -159,18 +157,17 @@ delete(id, callback) {
                     GROUP BY teachers.id                       
                     ORDER BY total_students DESC
                     limit $1 
-                    OFFSET $2   `
+                    OFFSET $2   `;
 
-    db.query(query, [limit, offset], function(err, results){
-        if(err) throw `Database error. ${err}`
+    const results  = await db.query(query, [limit, offset]) 
+        return results.rows
+    }catch(error){
 
-        callback(results.rows)
-        //console.log(results)
-    })
-        
-    }    
+        console.error(error)
+    }
     
- }
+  },
+};
         
 
 

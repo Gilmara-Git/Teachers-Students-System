@@ -5,12 +5,12 @@ const Teacher = require("../models/teacher")
 
 module.exports = {
 
-    index(req, res) { 
+    async index(req, res) { 
         
         let {filter, page, limit} =  req.query
 
         page = page || 1
-        limit = limit || 2
+        limit = limit || 4
         let offset = limit * (page - 1)
 
 
@@ -18,18 +18,16 @@ module.exports = {
         // console.log(`${page} =>page`)
         // console.log(limit)
 
-        const params = {
-            filter,
-            limit,
-            offset,
-            callback(dbTeachers) {
-                if(dbTeachers == "") return res.render("teachers/not-found")
+        const params = { filter, limit, offset }
+        
+                let teachers = await Teacher.paginate(params)
+                if(teachers == "") return res.render("teachers/not-found")
                    
-                const teachers = dbTeachers.map((dbTeacher)=>{
+                teachers = teachers.map((teacher)=>{
 
                     newTeacher = {
-                        ...dbTeacher,
-                        subjects: dbTeacher.subjects.split(",")
+                        ...teacher,
+                        subjects: teacher.subjects.split(",")
                     }
 
                     return newTeacher
@@ -38,21 +36,13 @@ module.exports = {
                 const pagination = {
 
                     page,
-                    total: Math.ceil(dbTeachers[0].total/limit)
+                    total: Math.ceil(teachers[0].total/limit)
               
                 }
                      
-                
-
                 return res.render('teachers/index', {teachers, filter, pagination})
 
-            }
-            
-        }
-        
-        Teacher.paginate(params)
-        
-           },
+    },
     
     
     create(req, res) {
@@ -61,33 +51,20 @@ module.exports = {
 
      }, 
 
-    post(req, res) {
-        
+   async post(req, res) {        
             
-        Teacher.create(req.body, function(teacher){
-
-            
+        const teacher = await Teacher.create(req.body)
+         console.log('teacherId', teacher.id)   
             return res.redirect(`/teachers/${teacher.id}`)
-            
-        })
-    
   
      }, 
 
 
-    show(req, res) { 
+    async show(req, res) { 
 
-        const keys = Object.keys(req.body)
-        
-            for(let key of keys) {
-                if(req.body[key]=="") {   
-                return res.send("Fill in all the lines")
-            
-            }
-        }
-
-        Teacher.find(req.params.id, function(teacher){
+        const teacher = await Teacher.find(req.params.id)
             if(!teacher) return res.send("Teacher does not exist.")
+//            console.log('linha 77',teacher)
 
             teacher.dob = date(teacher.dob).birthday
             teacher.subjects = teacher.subjects.split(",")
@@ -96,45 +73,35 @@ module.exports = {
 
             return res.render('teachers/show', {teacher})
 
-        })
+    
 
     }, 
 
-    edit(req, res) { 
+   async edit(req, res) { 
 
-        Teacher.find(req.params.id, function(teacher){
+      const teacher = await  Teacher.find(req.params.id)
             if(!teacher)  res.send("Teacher not found.")
             
             teacher.dob = date(teacher.dob).iso
         
             return res.render("teachers/edit", {teacher})
 
-        })    
-
     }, 
-    update(req, res) { 
+    async update(req, res) { 
 
-        const keys = Object.keys(req.body)
-        
-        for(let key of keys) {
-    
-            if(req.body[key]=="")    
-               return res.send("Fill in all the lines")
-           
-           }
-           Teacher.update(req.body, function(){
+          await Teacher.update(req.body)
 
             return res.redirect(`/teachers/${req.body.id}`)
 
 
-           })
+           
     }, 
-    delete(req, res) {
+    async delete(req, res) {
 
-        Teacher.delete(req.body.id, function(){
+       await Teacher.delete(req.body.id)
 
             return res.redirect("/teachers")
-        })
+        
 
         } ,
     }

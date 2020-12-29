@@ -30,7 +30,8 @@ module.exports = {
     switch (userDegree) {
 
       case "H":
-        return "High School";
+        return "High School"
+        ;
 
       case "A":
         return "Associates";

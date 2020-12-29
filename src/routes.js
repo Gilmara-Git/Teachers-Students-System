@@ -15,7 +15,7 @@ routes.get("/teachers/create", teachers.create)
 routes.post("/teachers", TeacherValidator.post, teachers.post)
 routes.get("/teachers/:id", teachers.show)
 routes.get("/teachers/:id/edit", teachers.edit )
-routes.put("/teachers", teachers.update) //put
+routes.put("/teachers", TeacherValidator.update, teachers.update) //put
 routes.delete("/teachers", teachers.delete) // working on it
 
 
