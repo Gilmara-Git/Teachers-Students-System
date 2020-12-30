@@ -31,7 +31,8 @@ const Base = {
       console.error(error);
     }
   },
-  async create(fields) {
+  async create(fields) { //fields are coming destructered from controller
+    console.log('creating student', fields)
     try {
       let keys = [],
         values = [];

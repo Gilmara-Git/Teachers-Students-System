@@ -34,15 +34,29 @@ module.exports = {
   },
 
  async post(req, res) {
-    
-    const student = await Student.create(req.body)
+   console.log(req.body)
+    const { avatar_url, name, email, dob, grade, hours_classes, teacher_id} = req.body
+    const student = await Student.create( { 
+
+      avatar_url, 
+      name, 
+      email, 
+      dob, 
+      grade, 
+      hours_classes, 
+      created_at: date(Date.now()).iso, 
+      teacher_id
+
+    })
       return res.redirect(`/students/${student.id}`);
    
   },
 
   async show(req, res) {
-    const student = await Student.find(req.params.id)
-      if (!student) return res.send("Student does not exist");
+
+    const { id } = req.params
+    const student = await Student.find({where: {id}})
+      if (!student) return res.send("Student not found!");
 
       student.dob = date(student.dob).birthday,
       student.created_at = date(student.created_at).format,
@@ -54,7 +68,7 @@ module.exports = {
 
  async edit(req, res) {
     const student = await Student.find(req.params.id)
-      if (!student) res.send("Student does not exist.");
+      if (!student) res.send("Student not found!.");
 
       student.dob = date(student.dob).iso,
       student.grade = grade(student.grade);

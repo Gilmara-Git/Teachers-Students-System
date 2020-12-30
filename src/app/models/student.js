@@ -7,57 +7,6 @@ Base.init({table: "students"})
 module.exports = {
   ...Base,
 
-  async create(data) {
-    try {
-      const query = `
-    INSERT INTO students (
-        avatar_url,
-        name,
-        email,
-        dob,
-        grade,
-        hours_classes,
-        created_at,
-        teacher_id
-   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-   RETURNING id    
-`;
-
-      const values = [
-        data.avatar_url,
-        data.name,
-        data.email,
-        date(data.dob).iso,
-        data.grade,
-        data.hours_classes,
-        date(Date.now()).iso, // created_at
-        data.teacher,
-      ];
-
-      const results = await db.query(query, values);
-      return results.rows[0];
-    } catch (error) {
-      console.error(error);
-    }
-  },
-
-  async find(id) {
-    //console.log(id)
-    try {
-      const results = await db.query(
-        `  SELECT students.*, teachers.name AS teacher_name
-                from students
-                LEFT JOIN teachers ON( teachers.id = students.teacher_id) 
-                WHERE students.id = $1`,
-        [id]
-      );
-
-      return results.rows[0];
-    } catch (error) {
-      console.error(error);
-    }
-  },
-
   async update(data) {
     console.log(data);
 
