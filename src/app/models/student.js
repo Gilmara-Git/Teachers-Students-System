@@ -7,46 +7,18 @@ Base.init({table: "students"})
 module.exports = {
   ...Base,
 
-  async update(data) {
-    console.log(data);
+  async studentTeacher(id){
 
-    try {
-      const query = `    
-        UPDATE students SET 
-        avatar_url=($1),
-        name=($2),
-        email=($3),
-        dob=($4),
-        grade=($5),
-        hours_classes=($6),
-        teacher_id =($7)
-        WHERE id = $8  
-                    `;
+    try{
 
-      const values = [
-        data.avatar_url,
-        data.name,
-        data.email,
-        date(data.dob).iso,
-        data.grade,
-        data.hours_classes,
-        data.teacher,
-        data.id,
-      ];
+      const results = await db.query(`SELECT teachers.name from teachers where id = ${id}`)
 
-      return await db.query(query, values);
-    } catch (error) {
-      console.error(error);
+      return results.rows[0]
+
+    }catch(error){
+      console.error(error)
     }
-  },
-
-  async delete(id) {
-    try {
-      return await db.query(`DELETE FROM students WHERE id= $1 `, [id]);
-    } catch (error) {
-      console.error(error);
-    }
-  },
+},
 
   async teachersSelectOptions() {
     try {
@@ -56,32 +28,6 @@ module.exports = {
       console.error(error);
     }
   },
-
-//   async findBY(filter) {
-//     //console.log(filter)
-//     try {
-//       let query = `SELECT * 
-//                     FROM students   
-//                     ORDER BY students.name ASC`;
-
-//       const queryFilter = `WHERE students.name ILIKE '%${filter}%'
-//                          OR students.email ILIKE '%${filter}%'  `;
-
-//       if (filter) {
-//         query = `SELECT * 
-//                 FROM students 
-//                 ${queryFilter}  
-//                 ORDER BY students.name ASC
-//                     `;
-//       }
-
-//       const results = await db.query(query);
-//       return results.rows;
-
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   },
 
   async paginate(params) {
     try {

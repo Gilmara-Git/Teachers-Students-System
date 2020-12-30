@@ -1,11 +1,11 @@
-
-const { grade, date } = require("../../lib/utils")
+const { grade, date } = require("../../lib/utils");
 //const Intl = require("intl")
-const Student = require("../models/student")
-
+const Student = require("../models/student");
 
 module.exports = {
   async index(req, res) {
+
+    try{
     let { filter, page, limit } = req.query;
 
     page = page || 1;
@@ -26,72 +26,123 @@ module.exports = {
     };
 
     return res.render("students/index", { students, filter, pagination });
+  }catch(error){
+    console.error(error)
+  }
   },
 
   async create(req, res) {
-    const teacherIdName = await Student.teachersSelectOptions() 
-      return res.render("students/create", { teacherOptions: teacherIdName }); 
+    try{
+    const teacherIdName = await Student.teachersSelectOptions();
+    return res.render("students/create", { teacherOptions: teacherIdName });
+    }catch(error){
+      console.error(error)
+    }
   },
 
- async post(req, res) {
-   console.log(req.body)
-    const { avatar_url, name, email, dob, grade, hours_classes, teacher_id} = req.body
-    const student = await Student.create( { 
+  async post(req, res) {
 
-      avatar_url, 
-      name, 
-      email, 
-      dob, 
-      grade, 
-      hours_classes, 
-      created_at: date(Date.now()).iso, 
-      teacher_id
-
-    })
-      return res.redirect(`/students/${student.id}`);
-   
+    try{
+    console.log(req.body);
+    const {
+      avatar_url,
+      name,
+      email,
+      dob,
+      grade,
+      hours_classes,
+      teacher_id,
+    } = req.body;
+    const student = await Student.create({
+      avatar_url,
+      name,
+      email,
+      dob,
+      grade,
+      hours_classes,
+      created_at: date(Date.now()).iso,
+      teacher_id,
+    });
+    return res.redirect(`/students/${student.id}`);
+  }catch(error){
+    console.error(error)
+  }
   },
 
   async show(req, res) {
-
-    const { id } = req.params
-    const student = await Student.find({where: {id}})
+    try {
+      const { id } = req.params;
+      const student = await Student.find({ where: { id } });
       if (!student) return res.send("Student not found!");
+      
+      if(student.teacher_id === null){
+        student.teacher_name = "No teacher selected yet"
+      } else{      
+      const teacher = await Student.studentTeacher(student.teacher_id);
+      student.teacher_name = teacher.name;
+      }
 
       student.dob = date(student.dob).birthday,
       student.created_at = date(student.created_at).format,
       student.grade = grade(student.grade);
+     
 
       return res.render("students/show", { student });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  async edit(req, res) {
+    try{
+    const { id } = req.params;
+    const student = await Student.find({ where: { id } });
+    if (!student) res.send("Student not found!.");
+
+    (student.dob = date(student.dob).iso),
+      (student.grade = grade(student.grade));
+
+    const teacherIdName = await Student.teachersSelectOptions();
+    return res.render("students/edit", { student, teacherOptions: teacherIdName, });
+
+    }catch(error){
+      console.error(error)
+    }
+  },
+
+  async update(req, res) {
+    try {
+    const {
+      avatar_url,
+      name,
+      email,
+      dob,
+      grade,
+      hours_classes,
+      teacher_id,
+    } = req.body;
+
+    await Student.update(req.body.id, {
+      avatar_url,
+      name,
+      email,
+      dob,
+      grade,
+      hours_classes,
+      teacher_id,
+    });
     
+    return res.redirect(`students/${req.body.id}`);
+  }catch(error){
+    console.error(error)
+  }
   },
-
- async edit(req, res) {
-    const student = await Student.find(req.params.id)
-      if (!student) res.send("Student not found!.");
-
-      student.dob = date(student.dob).iso,
-      student.grade = grade(student.grade);
-
-      const teacherIdName = await Student.teachersSelectOptions()
-        console.log(teacherIdName);
-        return res.render("students/edit", { student,teacherOptions: teacherIdName });
-    
-  },
-
- async update(req, res) {
-   
-    await Student.update(req.body)
-      //console.log(req.body)
-      return res.redirect(`students/${req.body.id}`);
-   
-  },
- async delete(req, res) {
-    await Student.delete(req.body.id)
-      return res.redirect("students");
-    
-  },
+  async delete(req, res) {
+    try{
+    await Student.delete(req.body.id);
+    return res.redirect("students");
+    }catch(error){
+      console.error(error)
+    }
+  }
 };
-
-
-

@@ -4,6 +4,8 @@ const Teacher = require("../models/teacher");
 
 module.exports = {
   async index(req, res) {
+
+    try {
     let { filter, page, limit } = req.query;
 
     page = page || 1;
@@ -30,12 +32,15 @@ module.exports = {
     };
 
     return res.render("teachers/index", { teachers, filter, pagination });
+  }catch(error){
+    console.error(error)
+  }
   },
   create(req, res) {
     return res.render("teachers/create");
   },
   async post(req, res) {
-    
+    try{
     const { avatar_url, name, dob, degree, delivery, subjects } = req.body
     
     const teacherId = await Teacher.create({
@@ -50,9 +55,13 @@ module.exports = {
 
     
     return res.redirect(`/teachers/${teacherId}`);
+  }catch(error){
+    console.error(error)
+  }
   },
   async show(req, res) {
 
+    try {
     const { id } = req.params
     
     const teacher = await Teacher.find({where: {id}} )
@@ -65,9 +74,12 @@ module.exports = {
     teacher.degree = graduation(teacher.degree);
 
     return res.render("teachers/show", { teacher });
+    }catch(error){
+      console.error(error)
+    }
   },
   async edit(req, res) {
-
+    try{
     const { id } = req.params
     const teacher = await Teacher.find({where: { id }});
     
@@ -76,9 +88,12 @@ module.exports = {
     teacher.dob = date(teacher.dob).iso;
 
     return res.render("teachers/edit", { teacher });
+    }catch(error){
+      console.error(error)
+    }
   },
   async update(req, res) {
-
+    try{
     const { avatar_url, name, dob, degree, delivery, subjects } = req.body
     await Teacher.update(req.body.id, {
       avatar_url, 
@@ -90,11 +105,18 @@ module.exports = {
     });
 
     return res.redirect(`/teachers/${req.body.id}`);
+  }catch(error){
+    console.error(error)
+  }
   },
   async delete(req, res) {
+    try {
     await Teacher.delete(req.body.id);
 
     return res.redirect("/teachers");
+    }catch(error){
+      console.error(error)
+    }
   },
 
 };

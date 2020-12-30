@@ -3,16 +3,20 @@ const db = require('../../config/db')
 
 const Base = {
   init({ table }) {
-    if (!table) throw new Error("Invalid Params!");
+      try{
+    if (!table) throw new Error("Invalid table params passed to the Base!");
     this.table = table;
     return this;
+      }catch(error){
+          console.log(error)
+      }
   },
-  async find(filters) {
+  async find(filters) { //{where: {id}}
        
     try {
     let query = `SELECT * FROM ${this.table}`;
         
-    if(!filters){ // in case I need to bring all teachers      
+    if(!filters){ // in case I need to bring all teachers/students    
         const results = await db.query(query);
         return results.rows;
 
@@ -32,7 +36,7 @@ const Base = {
     }
   },
   async create(fields) { //fields are coming destructered from controller
-    console.log('creating student', fields)
+    
     try {
       let keys = [],
         values = [];
@@ -54,10 +58,8 @@ const Base = {
       console.error(error);
     }
   },
-  update(id, fields) {
-
-    try{
-      
+  update(id, fields) { //fields are coming destructered from controller
+    try{      
       let update = []
 
       Object.keys(fields).map(key=>{
@@ -71,7 +73,7 @@ const Base = {
                     ${update.join(',')}
                     WHERE id = ${id}`
 
-                 
+             
        return db.query(query)               
 
     }catch(error){
@@ -79,7 +81,7 @@ const Base = {
     }
   },
   async delete(id) {
-
+    
     try{
 
     return await db.query(`DELETE FROM ${this.table} WHERE id= $1 `,[id] )
