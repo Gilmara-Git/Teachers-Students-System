@@ -43,17 +43,12 @@ module.exports = {
   async post(req, res) {
 
     try{
-    console.log(req.body);
+    
     const {
-      avatar_url,
-      name,
-      email,
-      dob,
-      grade,
-      hours_classes,
-      teacher_id,
-    } = req.body;
-    const student = await Student.create({
+      avatar_url,name,email, dob, grade,  hours_classes, teacher_id,  } = req.body;
+    
+      const student = await Student.create({
+      
       avatar_url,
       name,
       email,
