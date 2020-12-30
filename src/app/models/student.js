@@ -1,11 +1,11 @@
 const db =  require("../../config/db")
 const { date, graduation} =  require("../../lib/utils")
+const Base = require('./base')
+
+Base.init({table: "students"})
 
 module.exports = {
-  //   async all() {
-  //     const results = await db.query( `SELECT * FROM students ORDER BY name ASC`)
-  //       return results.rows
-  //   },
+  ...Base,
 
   async create(data) {
     try {

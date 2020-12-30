@@ -1,5 +1,5 @@
 const { graduation, date } = require("../../lib/utils");
-const Intl = require("intl");
+//const Intl = require("intl");
 const Teacher = require("../models/teacher");
 
 module.exports = {
@@ -31,21 +31,33 @@ module.exports = {
 
     return res.render("teachers/index", { teachers, filter, pagination });
   },
-
   create(req, res) {
     return res.render("teachers/create");
   },
-
   async post(req, res) {
-    const teacher = await Teacher.create(req.body);
-    console.log("teacherId", teacher.id);
-    return res.redirect(`/teachers/${teacher.id}`);
-  },
+    
+    const { avatar_url, name, dob, degree, delivery, subjects } = req.body
+    
+    const teacherId = await Teacher.create({
+        avatar_url,
+        name,
+        dob,
+        degree,
+        delivery,
+        subjects,
+        created_at: date(Date.now()).iso
+    });
 
+    
+    return res.redirect(`/teachers/${teacherId}`);
+  },
   async show(req, res) {
-    const teacher = await Teacher.find(req.params.id);
-    if (!teacher) return res.send("Teacher does not exist.");
-    //            console.log('linha 77',teacher)
+
+    const { id } = req.params
+    
+    const teacher = await Teacher.find({where: {id}} )
+
+    if (!teacher) return res.send("Teacher does not exist.");    
 
     teacher.dob = date(teacher.dob).birthday;
     teacher.subjects = teacher.subjects.split(",");
@@ -54,9 +66,11 @@ module.exports = {
 
     return res.render("teachers/show", { teacher });
   },
-
   async edit(req, res) {
-    const teacher = await Teacher.find(req.params.id);
+
+    const { id } = req.params
+    const teacher = await Teacher.find({where: { id }});
+    
     if (!teacher) res.send("Teacher not found.");
 
     teacher.dob = date(teacher.dob).iso;
@@ -64,7 +78,16 @@ module.exports = {
     return res.render("teachers/edit", { teacher });
   },
   async update(req, res) {
-    await Teacher.update(req.body);
+
+    const { avatar_url, name, dob, degree, delivery, subjects } = req.body
+    await Teacher.update(req.body.id, {
+      avatar_url, 
+      name, 
+      dob, 
+      degree, 
+      delivery, 
+      subjects
+    });
 
     return res.redirect(`/teachers/${req.body.id}`);
   },
@@ -73,4 +96,5 @@ module.exports = {
 
     return res.redirect("/teachers");
   },
+
 };
