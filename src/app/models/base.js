@@ -36,7 +36,7 @@ const Base = {
     }
   },
   async create(fields) { //fields are coming destructered from controller
-    
+    console.log('fields for resource creation',fields)
     try {
       let keys = [],
         values = [];

@@ -1,25 +1,27 @@
 const faker  = require('faker')
-//onst Teacher = require('./src/models/teacher')
+const Teacher = require('./src/app/models/teacher')
+const Student = require('./src/app/models/student');
+const { date } = require('./src/lib/utils');
 
 let teachers = [],
 teachersIds = []
-let totalTeachers = 10;
+const totalTeachers = 10;
 let degree = []
 degree.push("H", "A", "B", "M", "D" )
 let delivery = []
 delivery.push("E","P")
 
 
-let students = [],
-totalStudents = 5;
+let students = []
+const totalStudents = 5;
 
 let grade = []
 grade.push("5", "6", "7", "8", "9", "10", "11", "12")
 
 
-console.log(delivery.length)
-const random = delivery[Math.floor(Math.random() * delivery.length)]
-console.log(random)
+//console.log(delivery.length)
+//const random = delivery[Math.floor(Math.random() * delivery.length)]
+//console.log(random)
 
 async function createTeachers(){
 
@@ -27,11 +29,11 @@ async function createTeachers(){
         teachers.push({
             avatar_url: faker.image.image(),
             name: faker.name.firstName(),
-            dob: faker.date.past(),
+            dob: date(faker.date.past()).iso,
             degree: degree[Math.floor(Math.random() * degree.length)],
             delivery:delivery[Math.floor(Math.random() * delivery.length)],
             subjects: faker.random.words(),
-            created_at: faker.date.recent()
+            created_at: date(Date.now()).iso
         })
     }
    
@@ -39,36 +41,38 @@ async function createTeachers(){
    const teachersPromise = teachers.map(teacher=>Teacher.create(teacher))
    teachersIds = await Promise.all(teachersPromise)
    
+   
 }
 
 async function createStudents(){
 
     while(students.length < totalStudents){
+        console.log(totalStudents)
         students.push({
             avatar_url: faker.image.image(),
             name: faker.name.firstName(),
             email:faker.internet.email(),
-            dob: faker.date.past(),
+            dob: date(faker.date.past()).iso,
             grade: grade[Math.floor(Math.random() * grade.length )],
             hours_classes:faker.random.number(40),
-            created_at: faker.date.recent(),
-            teacher_id: teacherIds[Math.floor(Math.random()* totalTeachers)],
+            created_at: date(Date.now()).iso,
+            teacher_id: teachersIds[Math.floor(Math.random()* totalTeachers)],
         })
 
-    
-        const usersPromise = students.map(student=> Student.create(student))
-        const users = await Promise.all(usersPromise)
+        
+        const studentsPromise = students.map(student=> Student.create(student))
+        const allStudents = await Promise.all(studentsPromise)
+        //console.log('allstudents', allStudents)
 
     }
 }
 
 
-
-
-
-// function resourcesCreation(){
+async function resourcesCreation(){
     
-//      createTeachers()
-//      createStudents()
+    await createTeachers()
+    await createStudents()
 
-// }
+}
+
+resourcesCreation()
