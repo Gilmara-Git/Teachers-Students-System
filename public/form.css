@@ -5,7 +5,7 @@ form input {
 
     outline:none;
     width:100%;
-    color:forestgreen;      
+    color:forestgreen;   
     font-size:18px; 
     /*font-weight: bold;  */
     background-color: var(--color-details-background);

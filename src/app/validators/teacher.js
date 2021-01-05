@@ -4,10 +4,10 @@ function checkAllfields(body){
     const keys = Object.keys(body);
     for(let key of keys){
         if(body[key]==""){
-          const error = "Please, fill out all fiels!"
+          
           return { 
-              error: error,
-              body
+            error : "Please fill out all fields!!",
+            teacher: body
         }
     }
 }
@@ -17,7 +17,7 @@ function checkAllfields(body){
  function post(req, res, next){ 
 
     const fieldsInBlank = checkAllfields(req.body)
-    if(fieldsInBlank) return res.send("Fill all lines")
+    if(fieldsInBlank) return res.render("teachers/create", fieldsInBlank )
     
     next()
     }
@@ -26,7 +26,7 @@ function checkAllfields(body){
     function update(req, res, next){ 
 
         const fieldsInBlank = checkAllfields(req.body)
-        if(fieldsInBlank) return res.send("Fill all lines, this is the update")
+        if(fieldsInBlank) return res.render("teachers/edit", fieldsInBlank);
         next()
     }
 

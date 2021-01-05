@@ -439,3 +439,33 @@ p#not-found  {
 
     color: forestgreen;
 }
+
+/*================================================================*/
+/*.messages { 
+
+    color:black;
+    font-size: 26px;
+    position: absolute;   
+    height: 80px;
+    width: 803px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    bottom: 0;
+    top: 0;
+    right: 0;
+    left: 0; 
+    margin: auto;
+    
+    animation: message 2s ;
+    visibility: hidden;
+
+}*/
+
+
+
+/*.messages.success { 
+
+   background: rgb(102, 139, 34);
+}*/

@@ -52,11 +52,16 @@ module.exports = {
         subjects,
         created_at: date(Date.now()).iso
     });
-
     
-    return res.redirect(`/teachers/${teacherId}`);
+    return res.redirect(`/teachers/${req.body.id}`);
+
   }catch(error){
     console.error(error)
+    return res.render("teachers/show", {  
+      
+      error: "Something went wrong!!"
+    
+      });
   }
   },
   async show(req, res) {
@@ -84,7 +89,6 @@ module.exports = {
     const teacher = await Teacher.find({where: { id }});
     
     if (!teacher) res.send("Teacher not found.");
-
     teacher.dob = date(teacher.dob).iso;
 
     return res.render("teachers/edit", { teacher });

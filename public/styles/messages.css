@@ -1,0 +1,50 @@
+.messages { 
+
+     color:white;
+     font-size: 26px;
+     position: absolute;   
+     height: 80px;
+     width: 803px;
+     border-radius: 14px;
+     display: flex;
+     justify-content: center;
+     align-items: center; 
+     bottom: 0;
+     top: 0;
+     right: 0;
+     left: 0; 
+     margin: auto;
+     
+     animation: message 2s 400ms ease-out forwards;
+     visibility: hidden;
+
+}
+
+.messages.error { 
+
+    background: red; 
+}
+
+.messages.success { 
+
+    background: rgb(102, 139, 34);
+}
+
+@keyframes message{
+    0% { 
+         visibility: hidden;
+         transform: skew(40deg, 20deg)
+         /*transform: rotate(360deg)*/
+         /*transform: scale(1.0, 0.5)*/
+        /* transform: matrix(1, 2, 3, 4, 5, 6);*/
+        /*transform: translateY(120px, 50%);*/
+        }
+    90% { 
+        
+        visibility:visible; 
+    
+    }  
+    100% { 
+        visibility: hidden;
+    }
+}
