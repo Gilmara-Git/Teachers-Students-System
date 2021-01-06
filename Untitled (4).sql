@@ -15,7 +15,7 @@ CREATE TABLE "teachers" (
 
 CREATE TABLE "students" (
   "id" SERIAL PRIMARY KEY,
-  "teacher_id" int NOT NULL,
+  "teacher_id" int,
   "avatar_url" text NOT NULL,
   "name" text NOT NULL,
   "email" text NOT NULL,

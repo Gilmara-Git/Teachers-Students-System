@@ -66,6 +66,22 @@ module.exports = {
       console.error(error);
     }
   },
+
+  async ifTeacherHasStudents(id){
+
+    try{  
+      
+      const results = await db.query(`SELECT * FROM students where teacher_id=${id}`)
+      return results.rows
+  }
+    catch(error){ 
+
+      console.error
+    
+    }
+
+    
+  }
 };
 
 

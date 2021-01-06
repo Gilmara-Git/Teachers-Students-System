@@ -25,10 +25,10 @@
     background: red; 
 }
 
-.messages.success { 
+/*.messages.success { 
 
     background: rgb(102, 139, 34);
-}
+}*/
 
 @keyframes message{
     0% { 

@@ -1,0 +1,24 @@
+{% extends 'layout.njk' %}
+
+{% block content %}
+    <div class="lottie-message">
+        <div class="lottie delete"></div>
+        <div class='showMessage'>Resource <span>deleted</span> with success!!<div>
+    </div>
+
+<script src="/lottie.min.js"></script>
+
+<script>
+const element = document.querySelector('.lottie')    
+
+lottie.loadAnimation({
+  container: element, // the dom element that will contain the animation
+  renderer: 'svg',
+  loop: true,
+  autoplay: true,
+  path: '/2942-delete-bubble.json' // the path to the animation json
+});
+
+</script>
+
+{% endblock content %}

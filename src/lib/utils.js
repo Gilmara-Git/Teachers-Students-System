@@ -52,7 +52,7 @@ module.exports = {
 
   date(timestamp) {
 
-    console.log('timestamp na funcao date', timestamp)
+    //console.log('timestamp na funcao date', timestamp)
     const dob = new Date(timestamp)
 
     const year = dob.getUTCFullYear()

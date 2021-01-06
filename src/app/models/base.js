@@ -29,6 +29,8 @@ const Base = {
         });
       });
     }
+
+    //console.log('query', query)
       const results = await db.query(query);
       return results.rows[0];
     } catch (error) {
@@ -81,6 +83,7 @@ const Base = {
     }
   },
   async delete(id) {
+    console.log('id no delete do base.js', id)
     
     try{
 
@@ -89,6 +92,7 @@ const Base = {
     }catch(error){
         console.error(error)
     } 
+    console.log(this.table)
   }
   
 };

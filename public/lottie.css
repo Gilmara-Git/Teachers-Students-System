@@ -1,0 +1,47 @@
+.lottie-message{
+
+    width: 500px;
+    height: 600px;
+    background: transparent;
+    display: flex;
+    margin: 0 auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  
+    
+    
+}
+
+.showMessage {
+
+   font-size:26px;
+   width: 80%;
+   color: balck;  
+   box-shadow: 1px 1px 1px 1px black;
+   text-shadow: 5px 6px 8px orange; 
+   text-align: center;
+   background:rgba(0,0,0,0.1);
+   border-radius: 6px;
+
+
+}
+.showMessage.success {
+
+    color: green;
+    text-shadow: 1px 1px 1px black;
+}
+
+span{
+
+    color: red;
+    font-weight: bold;
+}
+
+
+.lottie.delete {
+
+    height: 200px;
+    width: 900px;
+}
+

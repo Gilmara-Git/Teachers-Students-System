@@ -42,7 +42,7 @@ module.exports = {
   async post(req, res) {
     try{
     const { avatar_url, name, dob, degree, delivery, subjects } = req.body
-    
+        
     const teacherId = await Teacher.create({
         avatar_url,
         name,
@@ -53,15 +53,11 @@ module.exports = {
         created_at: date(Date.now()).iso
     });
     
-    return res.redirect(`/teachers/${req.body.id}`);
+    return res.render('lottiePages/createUpdate')
 
   }catch(error){
     console.error(error)
-    return res.render("teachers/show", {  
-      
-      error: "Something went wrong!!"
     
-      });
   }
   },
   async show(req, res) {
@@ -108,7 +104,7 @@ module.exports = {
       subjects
     });
 
-    return res.redirect(`/teachers/${req.body.id}`);
+    return res.render('lottiePages/createUpdate')
   }catch(error){
     console.error(error)
   }
@@ -117,7 +113,7 @@ module.exports = {
     try {
     await Teacher.delete(req.body.id);
 
-    return res.redirect("/teachers");
+    return res.render('lottiePages/delete')
     }catch(error){
       console.error(error)
     }
