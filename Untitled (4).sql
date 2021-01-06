@@ -2,6 +2,10 @@ DROP database dbteachers_students
 --DROP SCHEMA public CASCADE
 --CREATE SCHEMA public
 
+-- Command to ALTER sequence id when creating database or re-populating data
+ALTER SEQUENCE students_id_seq RESTART WITH 1
+ALTER SEQUENCE teachers_id_seq RESTART WITH 1
+
 CREATE TABLE "teachers" (
   "id" SERIAL PRIMARY KEY,
   "avatar_url" text NOT NULL,
