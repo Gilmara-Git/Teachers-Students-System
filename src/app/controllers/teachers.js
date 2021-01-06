@@ -57,6 +57,7 @@ module.exports = {
 
   }catch(error){
     console.error(error)
+    return res.render('lottiePages/error.njk')
     
   }
   },
@@ -77,6 +78,7 @@ module.exports = {
     return res.render("teachers/show", { teacher });
     }catch(error){
       console.error(error)
+      return res.render('lottiePages/error.njk')
     }
   },
   async edit(req, res) {
@@ -90,6 +92,7 @@ module.exports = {
     return res.render("teachers/edit", { teacher });
     }catch(error){
       console.error(error)
+      return res.render('lottiePages/error.njk')
     }
   },
   async update(req, res) {
@@ -107,6 +110,7 @@ module.exports = {
     return res.render('lottiePages/createUpdate')
   }catch(error){
     console.error(error)
+    return res.render('lottiePages/error.njk')
   }
   },
   async delete(req, res) {
@@ -116,6 +120,7 @@ module.exports = {
     return res.render('lottiePages/delete')
     }catch(error){
       console.error(error)
+      return res.render('lottiePages/error.njk')
     }
   },
 

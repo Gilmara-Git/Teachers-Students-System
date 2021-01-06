@@ -25,9 +25,11 @@ module.exports = {
       total: Math.ceil(students[0].total / limit),
     };
 
+ 
     return res.render("students/index", { students, filter, pagination });
   }catch(error){
     console.error(error)
+    return res.render('lottiePages/error.njk')
   }
   },
 
@@ -58,9 +60,11 @@ module.exports = {
       created_at: date(Date.now()).iso,
       teacher_id,
     });
-    return res.redirect(`/students/${student.id}`);
+    return res.render('lottiePages/createUpdate')
+    //return res.redirect(`/students/${student.id}`);
   }catch(error){
     console.error(error)
+    return res.render('lottiePages/error.njk')
   }
   },
 
@@ -81,10 +85,11 @@ module.exports = {
       student.created_at = date(student.created_at).format,
       student.grade = grade(student.grade);
      
-
+    
       return res.render("students/show", { student });
     } catch (error) {
       console.error(error);
+      return res.render('lottiePages/error.njk')
     }
   },
 
@@ -102,6 +107,7 @@ module.exports = {
 
     }catch(error){
       console.error(error)
+      return res.render('lottiePages/error.njk')
     }
   },
 
@@ -126,18 +132,21 @@ module.exports = {
       hours_classes,
       teacher_id,
     });
-    
-    return res.redirect(`students/${req.body.id}`);
+    return res.render('lottiePages/createUpdate')
+    //return res.redirect(`students/${req.body.id}`);
   }catch(error){
     console.error(error)
+    return res.render('lottiePages/error.njk')
   }
   },
   async delete(req, res) {
     try{
     await Student.delete(req.body.id);
-    return res.redirect("students");
+    return res.render('lottiePages/delete')
+    //return res.redirect("students");
     }catch(error){
       console.error(error)
+      return res.render('lottiePages/error.njk')
     }
   }
 };
