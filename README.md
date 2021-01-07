@@ -3,7 +3,9 @@
 
 <h1 align="center"><b>Teachers and Students</b></h1>
 
-<p align="center"><img src="https://ik.imagekit.io/cnbmdh4b9w/ezgif.com-video-to-gif__1__rWgLqODbZ.gif"></p>
+<p align="center">
+    <img src="https://ik.imagekit.io/cnbmdh4b9w/ezgif.com-video-to-gif__1__rWgLqODbZ.gif">
+</p>
 
 
 ## About 
