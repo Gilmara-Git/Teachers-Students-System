@@ -6,7 +6,7 @@
 <p align="center">
     <img src="https://ik.imagekit.io/cnbmdh4b9w/ezgif.com-video-to-gif__1__rWgLqODbZ.gif">
 </p>
-
+ <p align="center"><img src="https://ik.imagekit.io/cnbmdh4b9w/ezgif.com-gif-maker__9__cwtyXJdAW.gif"></p>
 
 ## About 
 This is a project about building a Teachers and Students Web Application. 
@@ -18,7 +18,7 @@ This is a project about building a Teachers and Students Web Application.
  - Show how many Students per Teacher
  - Model View Controller
  - Animation with lottie files when resource is created/updated or deleted.  
- <p align="center"><img src="https://ik.imagekit.io/cnbmdh4b9w/ezgif.com-gif-maker__9__cwtyXJdAW.gif"></p> 
+ 
 
 ## Extra functionalities created
 - Implemented the **pagination** logic based on the total number of records returned from DATABASE. In order to do that, 
