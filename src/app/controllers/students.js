@@ -99,7 +99,7 @@ module.exports = {
     const student = await Student.find({ where: { id } });
     if (!student) res.send("Student not found!.");
 
-    (student.dob = date(student.dob).iso),
+      (student.dob = date(student.dob).iso),
       (student.grade = grade(student.grade));
 
     const teacherIdName = await Student.teachersSelectOptions();

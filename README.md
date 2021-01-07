@@ -16,7 +16,9 @@ This is a project about building a Teachers and Students Web Application.
  - Edit records
  - Filter records
  - Show how many Students per Teacher
- - Model View Controller
+ - Model - View  - Controller 
+ - Created a "base.js" file for reusing some functions on the MODAL 
+ - Created a validation to prevent blank fields. Used Html temporary message.
  - Animation with lottie files when resource is created/updated or deleted.  
  
 
