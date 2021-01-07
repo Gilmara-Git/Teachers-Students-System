@@ -30,7 +30,7 @@ module.exports = {
       page,
       total: Math.ceil(teachers[0].total / limit),
     };
-
+    return res.render('lottiePages/error.njk')
     return res.render("teachers/index", { teachers, filter, pagination });
   }catch(error){
     console.error(error)

@@ -17,19 +17,14 @@
 
    font-size:26px;
    width: 80%;
-   color: balck;  
+   color: black; 
    box-shadow: 1px 1px 1px 1px black;
-   text-shadow: 5px 6px 8px orange; 
+   text-shadow: 1px 1px 8px snow; 
    text-align: center;
    background:rgba(0,0,0,0.1);
    border-radius: 6px;
 
 
-}
-.showMessage.success {
-
-    color: green;
-    text-shadow: 1px 1px 1px black;
 }
 
 span{
